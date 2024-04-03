@@ -1,0 +1,44 @@
+/* General styles for the form */
+form {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  /* Styles for form labels */
+  label {
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  /* Styles for form inputs */
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+  }
+  
+  /* Style for the submit button */
+  button[type="submit"] {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  /* Add some hover effects for the button */
+  button[type="submit"]:hover {
+    background-color: #45a049;
+  }
+  

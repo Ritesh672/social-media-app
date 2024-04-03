@@ -1,0 +1,79 @@
+/* Overall styling for a clean and modern look */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5; /* Light background color */
+}
+
+/* Center the content horizontally and vertically */
+.container {
+  display: flex; /* Use flexbox for centered layout */
+  justify-content: center; /* Horizontally center content */
+  align-items: center; /* Vertically center content */
+  min-height: 100vh; /* Set minimum height for full viewport */
+  background-image: url("path/to/your/background.jpg"); /* Optional background image */
+  background-size: cover; /* Stretch background image */
+  background-position: center; /* Center background image */
+}
+
+/* Style the heading */
+#heading {
+  text-align: center; /* Center the heading text */
+  margin-bottom: 50px; /* Add some space below the heading */
+}
+
+#tag {
+  font-size: 3em; /* Increase heading font size */
+  color: #3f51b5; /* Blue color for Instagram-like feel */
+  font-weight: bold;
+}
+
+/* Style the login form */
+form {
+  display: flex; /* Arrange elements horizontally */
+  flex-direction: column; /* Stack elements on top of each other */
+  align-items: center; /* Center elements horizontally */
+  width: 300px; /* Set form width */
+  background-color: #fff; /* White background for the form */
+  padding: 20px; /* Add some padding inside the form */
+  border-radius: 5px; /* Rounded corners for a modern look */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  position: relative;
+  left: 40%;
+
+}
+
+form input,
+form button {
+  margin-bottom: 15px; /* Add spacing between input fields and button */
+  padding: 10px;
+  border: 1px solid #ccc; /* Light border for the input fields */
+  border-radius: 3px; /* Rounded corners for input fields and button */
+  font-size: 16px; /* Set font size for input fields and button */
+}
+
+form button {
+  background-color: #3f51b5; /* Blue color for Instagram-like button */
+  color: #fff; /* White text color for the button */
+  border: none; /* Remove border from the button */
+  cursor: pointer; /* Indicate clickable behavior */
+}
+
+form button:hover {
+  background-color: #29389a; /* Darken the button color on hover */
+}
+
+/* Additional style for the message paragraph */
+form p {
+  text-align: center; /* Center the message text */
+  color: red; /* Red color for error messages */
+  margin-bottom: 15px; /* Add some space below the message */
+}
+
+/* Style the register button */
+div:nth-child(3) {
+  position: absolute; /* Position the element absolutely */
+  top: 20px; /* Distance from the top of the page */
+  right: 20px; /* Distance from the right of the page */
+}

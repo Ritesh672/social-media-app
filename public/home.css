@@ -1,0 +1,189 @@
+/* Baseline styles */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  header,
+  main,
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  /* Header Styles */
+  header {
+    background-color: #f8f8f8;
+    padding: 10px 20px;
+  }
+  
+  .logo {
+    flex: 0 0 150px;
+  }
+  
+  .search-wrapper {
+    position: relative;
+    flex: 1;
+  }
+  
+  .search-wrapper input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .search-wrapper button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  
+  .search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    display: none;
+  }
+  
+  .search-wrapper:hover .search-dropdown {
+    display: block;
+  }
+  
+  .search-dropdown ul {
+    list-style: none;
+    padding: 10px;
+  }
+  
+  /* Navigation Styles */
+  nav {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+  
+  nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav li {
+    margin-right: 20px;
+  }
+  
+  nav li a {
+    display: flex;
+    align-items: center;
+  }
+  
+  nav li.active a {
+    font-weight: bold;
+  }
+  
+  nav li.dropdown a {
+    position: relative;
+  }
+  
+  nav li.dropdown .fas.fa-caret-down {
+    margin-left: 5px;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    display: none;
+  }
+  
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  
+  .dropdown-menu ul {
+    list-style: none;
+    padding: 10px;
+  }
+  
+  .profile {
+    flex: 0 0 50px;
+    position: relative;
+  }
+  
+  .profile img {
+    width: 100%;
+    border-radius: 50%;
+  }
+  
+  .profile-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    display: none;
+  }
+  
+  .profile:hover .profile-menu {
+    display: block;
+  }
+  
+  .profile-menu ul {
+    list-style: none;
+    padding: 10px;
+  }
+  
+  /* Main Content Styles */
+  main {
+    padding-top: 20px;
+  }
+  
+  .sidebar {
+    width: 25%;
+    padding: 10px;
+    border-right: 1px solid #ccc;
+  }
+  
+  .suggestions,
+  .trends {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .feed-container {
+    width: 75%;
+    padding: 10px;
+  }
+  
+  .load-more {
+    text-align: center;
+    margin-top: 20px;
+    border: none;
+    padding: 10px;
+    background-color: #eee;
+    
+  }  

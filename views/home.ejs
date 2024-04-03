@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social App</title>
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <a href="#">App Logo</a>
+    </div>
+    <div class="search-wrapper">
+      <input type="text" placeholder="What's happening?">
+      <button type="button"><i class="fas fa-search"></i></button>
+      <div class="search-dropdown">
+        <ul>
+          <li>Trending Topics</li>
+          <li>Recent Searches</li>
+        </ul>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#" class="active"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="#"><i class="fas fa-compass"></i> Explore</a></li>
+        <li><a href="#"><i class="fas fa-bell"></i> Notifications <span class="badge">10</span></a></li>
+        <li><a href="#"><i class="fas fa-envelope"></i> Direct Messages</a></li>
+        <li class="dropdown">
+          <a href="#">More <i class="fas fa-caret-down"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Lists</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="profile">
+        <a href="#"><img src="profile.jpg" alt="Profile Picture"></a>
+        <div class="profile-menu">
+          <ul>
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Create Tweet</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <aside class="sidebar">
+      <h2>Who to Follow</h2>
+      <ul class="suggestions">
+        </ul>
+      <h2>Trends</h2>
+      <ul class="trends">
+        </ul>
+    </aside>
+    <section class="feed-container">
+      <h2>What's Happening</h2>
+      <div class="feed">
+        </div>
+      <button class="load-more">Load More</button>
+    </section>
+  </main>
+  <footer>
+    <nav>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </nav>
+    <div class="language">
+      <select name="language">
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+      </select>
+    </div>
+  </footer>
+</body>
+</html>
