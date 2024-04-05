@@ -1,42 +1,69 @@
-import express from "express"; // import express and neccessary module
+import express from "express";
 import bodyParser from "body-parser";
-import ejs from "ejs";
 import pg from "pg";
-import axios from "axios";
-import bcrypt, { hash } from "bcrypt";
+import bcrypt from "bcrypt";
+import session from "express-session";
+import passport from "passport";
+import { Strategy } from "passport-local";
+import env from "dotenv";
 
-//define the app
+// Define the app
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+env.config()
 
-// connectin the database with the app
+// Connecting the database with the app
 const db = new pg.Client({
     user: "postgres",
-    host : "localhost",
-    database : "social",
+    host: "localhost",
+    database: "social",
     password: "Ritesh222@",
-    port : "5432"
-})
-
+    port: "5432"
+});
 db.connect();
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// the get request to render the home page of the website
-app.get("/", (req, res)=>{
+// Session middleware
+app.use(session({
+    secret: "TOPSECRETWORD", // the key to store the user login info
+    resave: false, // this is used to store the data on the database here is false cause we are not saving it 
+    saveUninitialized: true, // to store in the server memory
+    cookie : {
+        maxAge : 1000 * 60 * 60 * 24
+    }
+}));
+
+// Passport after the session middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// GET request to render the home page of the website
+app.get("/", (req, res) => {
+    res.render("home.ejs");
+});
+
+app.get("/login", (req, res) => {
     res.render("index.ejs");
 });
 
+app.get("/profile", (req, res) => {
+    console.log(req.user);
+    if (req.isAuthenticated()) {
+        res.render("profile.ejs");
+    } else {
+        res.redirect("/login");
+    }
+});
 
-// the register route 
-app.get("/register", (req, res)=>
-{
+// The register route 
+app.get("/register", (req, res) => {
     res.render("register.ejs");
 });
 
-//post request for the register route
+// POST request for the register route
 app.post("/register", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -55,68 +82,90 @@ app.post("/register", async (req, res) => {
         // Hash the password
         bcrypt.hash(password, saltRounds, async (err, hash) => {
             if (err) {
-                console.log("Error while generating hash value:", err);
+                console.error("Error while generating hash value:", err);
                 return res.status(500).send("Error while generating hash value");
             }
-
             try {
                 // Insert user data into the database
-                const input = await db.query("INSERT INTO users (username, password) VALUES ($1, $2);", [username, hash]);
-                // Redirect to home page after successful registration
-                res.render('home.ejs');
+                const  newUser =  await db.query ( "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;", [username, hash]);
+
+                console.log(newUser.rows[0]);
+
+
+                if (newUser.rows.length > 0){
+               
+                    const user = newUser.rows[0];
+                    req.login(user, (err)=>
+                    {
+                        console.log(err);
+                        res.redirect("/profile");
+
+                    });
+                }
+
+
+
             } catch (err) {
-                console.log("Error while inserting the user's data:", err);
+                console.error("Error while inserting the user's data:", err);
                 res.status(500).send("Error while inserting the user's data");
             }
         });
     } catch (err) {
-        console.log("Error while handling the SQL request:", err);
+        console.error("Error while handling the SQL request:", err);
         res.status(500).send("Error while handling the SQL request");
     }
 });
 
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/profile",
+    failureRedirect: "/login",
+}));
 
-
-app.post("/login", async (req, res) => {
+passport.use(new Strategy(async function verify(username, password, cb) {
     try {
-        const { username, password } = req.body;
-        
-        // if not username or passowrd
-        if (!username || !password) {
-            return res.render("index.ejs", {msg : "Username and password required"});
-        }
-        
-        // the query to select the hash password from the database
-        const userData = await db.query("SELECT password FROM users WHERE username = $1", [username]);
-        console.log(userData.rows[0]);
+        // Query to select the hashed password from the database
+        const userData = await db.query("SELECT * FROM users WHERE username = $1", [username]);
 
-        // to check if the user exists in the database
-        if (userData.rows.length === 0) {
-            return res.render("index.ejs", {msg : "User does not exist"});
-        }
-        else{
-            const hashPassword = userData.rows[0].password; // the hash password obtaine if the user exists in the database //
+        if (userData.rows.length > 0) {
+            // Check if the user exists in the database
+            const hashPassword = userData.rows[0].password;
 
-            // the bcrypt to encrypt the userpassword to check for the user password
-            bcrypt.compare(password, hashPassword, (err, result)=>
-            {
-                // handle the error 
-                if  (err) {
-                    console.log("Error while encrypting the password", err);}
-                else{
-                    if (result){
-                        res.render("home.ejs"); }
-                    else {
-                        res.render("login.ejs", {msg: "Incorrect password"});}
-                }});  
+            // Use bcrypt to compare the provided password with the hashed password
+            bcrypt.compare(password, hashPassword, function (err, result) {
+                if (err) {
+                    // Handle error
+                    return cb(err);
+                }
+                if (result) {
+                    // If passwords match, return the user
+                    return cb(null, userData.rows[0]);
+                } else {
+                    // If passwords don't match, return false
+                    return cb(null, false);
+                }
+            });
+        } else {
+            // If user is not found in the database, return false
+            return cb(null, false);
         }
     } catch (err) {
+        // Handle errors
         console.error("Error during login:", err);
-        res.status(500).send("Internal server error.");
+        return cb(err);
     }
+}));
+
+passport.serializeUser((user, cb)=>
+{
+    cb(null, user);
+});
+
+passport.deserializeUser((user, cb)=>
+{
+    cb(null, user);
 });
 
 
-app.listen(port, ()=>{
-    console.log(`server running on port ${port}`);
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });
