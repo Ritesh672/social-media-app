@@ -11,15 +11,15 @@ import env from "dotenv";
 const app = express();
 const port = 3000;
 const saltRounds = 10;
-env.config()
+env.config();
 
 // Connecting the database with the app
 const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "social",
-    password: "Ritesh222@",
-    port: "5432"
+    user: process.env.PG_USER,
+    host: process.env.PG_HOST,
+    database: process.env.PG_DATABASE,
+    password: process.env.PG_PASSWORD,
+    port: process.env.PG_PORT
 });
 db.connect();
 
@@ -28,7 +28,7 @@ app.use(express.static("public"));
 
 // Session middleware
 app.use(session({
-    secret: "TOPSECRETWORD", // the key to store the user login info
+    secret: process.env.SESSION_SECRET, // the key to store the user login info
     resave: false, // this is used to store the data on the database here is false cause we are not saving it 
     saveUninitialized: true, // to store in the server memory
     cookie : {
@@ -70,17 +70,17 @@ app.post("/register", async (req, res) => {
     if (!username || !password) {
         return res.render("register.ejs", { msg: "Username and password are required" });
     }
-
+         // try catch block to register the user and redirect to the profile page
     try {
         // Check if the user already exists
         const existUser = await db.query("SELECT username FROM users WHERE username = $1;", [username]);
 
         if (existUser.rows.length !== 0) {
             return res.render("register.ejs", { msg: "User already exists" });
-        }
+        } //error if the same username 
 
         // Hash the password
-        bcrypt.hash(password, saltRounds, async (err, hash) => {
+        bcrypt.hash(password, saltRounds, async (err, hash) => {  //use the bcrypt and store the hashed password of the user in the database
             if (err) {
                 console.error("Error while generating hash value:", err);
                 return res.status(500).send("Error while generating hash value");
@@ -88,23 +88,19 @@ app.post("/register", async (req, res) => {
             try {
                 // Insert user data into the database
                 const  newUser =  await db.query ( "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *;", [username, hash]);
-
                 console.log(newUser.rows[0]);
 
-
+                // redirecting the user to the login of the home page
                 if (newUser.rows.length > 0){
                
-                    const user = newUser.rows[0];
-                    req.login(user, (err)=>
+                    const user = newUser.rows[0];   // the user data that the user enter 
+                    req.login(user, (err)=>   // the login and authentication of the user
                     {
                         console.log(err);
                         res.redirect("/profile");
 
                     });
                 }
-
-
-
             } catch (err) {
                 console.error("Error while inserting the user's data:", err);
                 res.status(500).send("Error while inserting the user's data");
@@ -125,7 +121,6 @@ passport.use(new Strategy(async function verify(username, password, cb) {
     try {
         // Query to select the hashed password from the database
         const userData = await db.query("SELECT * FROM users WHERE username = $1", [username]);
-
         if (userData.rows.length > 0) {
             // Check if the user exists in the database
             const hashPassword = userData.rows[0].password;
