@@ -122,6 +122,15 @@ app.post("/login", passport.authenticate("local", {
     failureRedirect: "/login",
 }));
 
+app.get("/logout", (req, res)=>
+{
+    req.logout((err)=>
+{
+    if (err) console.log(err);
+    res.redirect("/")
+})
+})
+
 passport.use("local", new Strategy(async function (username, password, cb) {
     try {
         // Query to select the hashed password from the database
